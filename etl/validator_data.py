@@ -1,17 +1,17 @@
-from pyspark.sql.functions import col, count
+from pyspark.sql.functions import col, count, isnan, when
 
 
 class Validator:
     def __init__(self):
         pass
 
-    def is_col_contain_null(self, df):
+    def check_null_values(self, df):
         pass
 
     def drop_cols(self, df, *cols):
         pass
 
-    def duplicate_records_df(self, df, cols=None):
+    def check_duplicate_records(self, df, cols=None):
         pass
 
     def drop_duplicate_records_df(self, df, cols=None):
@@ -21,17 +21,39 @@ class Validator:
         pass
 
 
-class ValidatorImpl(Validator):
-    def is_col_contain_null(self, df):
+class ValidatorImpl(Validator):            
+    def check_null_values(self,dataframe):
         """
         :param df: DataFrame
         :return: DataFrame
         """
-        df_cols = df.schema.names
-        for c in df_cols:
-            null_count = df.filter((col(c).isNull()) | (col(c) == "")) \
-                .count()
-            print(c + ': ', null_count)
+        # Tên cột và kiểu
+        cols_info = [(c[0], c[1]) for c in dataframe.dtypes]
+        
+        # biểu thức
+        exprs = []
+        for column_name, data_type in cols_info:
+            # numeric types, kiểm tra null và NaN
+            if data_type in ('double', 'float'):
+                expr = count(
+                        when(
+                            isnan(col(column_name)) | col(column_name).isNull(), 
+                            column_name
+                        )
+                    )
+            # non-numeric types, chỉ kiểm tra null
+            else:
+                expr = count(
+                        when(
+                            col(column_name).isNull(), 
+                            column_name
+                        )
+                    )
+            
+            exprs.append(expr.alias(column_name))
+    
+        # in ra
+        dataframe.select(exprs).show()
 
     def drop_cols(self, df, cols):
         """
@@ -45,7 +67,7 @@ class ValidatorImpl(Validator):
         df = df.drop(*cols)
         return df
 
-    def duplicate_records_df(self, df, cols=None):
+    def check_duplicate_records(self, df, cols=None):
         """
         :param df: DataFrame
         :param cols: Danh sách cột
@@ -58,7 +80,7 @@ class ValidatorImpl(Validator):
         return df.groupBy(cols) \
             .agg(count("*") \
                  .alias("duplicate_count")) \
-            .filter(col("duplicate_count") > 1)
+            .filter(col("duplicate_count") > 1).show()
 
     def drop_duplicate_records_df(self, df, *cols):
         """
@@ -76,9 +98,6 @@ class ValidatorImpl(Validator):
             data_type_map: Dictionary: {'column_name': data_type}
             df: DataFrame
         """
-        print('validator called')
-        print('Type of: ', type(col_map))
         for col_name, data_type in col_map.items():
-            print(col_name, data_type)
             df = df.withColumn(col_name, col(col_name).cast(data_type))
         return df

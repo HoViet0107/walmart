@@ -9,7 +9,6 @@ class Datasource:
 
 class CSVDataSource(Datasource):
     def read_df(self):
-        print('CSVDataSource class called' )
         return (
             self.spark.read.csv(self.path, header=True, inferSchema=True)
         )

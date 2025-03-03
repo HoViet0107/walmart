@@ -1,7 +1,7 @@
-from etl.extractor import DataFrameExtractor
+from etl.extractor.extractor import DataFrameExtractor
 from pyspark.sql import SparkSession
-from etl.transform import DataTransform
 from pyspark.sql.types import *
+from etl.validator_data import ValidatorImpl
 
 # # Tạo Spark Session
 spark = SparkSession.builder \
@@ -11,40 +11,32 @@ spark = SparkSession.builder \
 
 
 # B1: Trích xuất dữ liệu từ các nguồn
+# B1: Trích xuất dữ liệu từ các nguồn
 customer_df = (DataFrameExtractor(spark)
-               .extract("csv", "dataset/customer_profile_dataset.csv"))
-purchase_df = (DataFrameExtractor(spark)
-               .extract("csv", "dataset/purchase_history_dataset.csv"))
+                    .extract("csv", "dataset/customer.csv"))
+
+fas_purchase_df = (DataFrameExtractor(spark)
+                    .extract("csv", "dataset/fashion_purchase_history.csv"))
+
 product_df = (DataFrameExtractor(spark)
-              .extract("csv", "dataset/products_dataset.csv"))
+                    .extract("csv", "dataset/products.csv"))
+# kiểm tra kiểu dữ liệu
+print('\033[1m' +"Kiểu dữ liệu:")
 customer_df.printSchema()
-purchase_df.printSchema()
+fas_purchase_df.printSchema()
 product_df.printSchema()
-# customer_df.show()
-# customer_df.printSchema()
+
+# kiểm tra null
+print('\033[1m' + "Null:")
+ValidatorImpl().check_null_values(customer_df)
+ValidatorImpl().check_null_values(fas_purchase_df)
+ValidatorImpl().check_null_values(product_df)
+
+# kiểm tra giá trị lặp
+print('\033[1m' +"Bản ghi lặp:")
+ValidatorImpl().check_duplicate_records(customer_df,['customer_id', 'first_name', 'last_name', 'gender', 'date_of_birth'])
+ValidatorImpl().check_duplicate_records(fas_purchase_df,['customer_id', 'item_purchased', 'date_purchase'])
+ValidatorImpl().check_duplicate_records(product_df,['item', 'category'])
+
+
 # B2: Triển khai logic chuyển đổi(transformation logic)
-"""
-customer_transform_condition = {
-            'drop_cols': ['state', 'city'],
-            'change_col_type':{
-                            'is_convert':True,
-                            'cols':{
-                                'customer_id': StringType(),
-                                'zip_code': StringType()
-                                }
-                            }
-            }
-"""
-customer_transform_condition = {}
-transformed_customer_df = DataTransform().transform(customer_df, customer_transform_condition)
-transformed_customer_df.printSchema()
-
-purchase_transform_condition = {
-    'drop_cols':['total_amount']
-}
-transformed_purchase_df = DataTransform().transform(purchase_df, purchase_transform_condition)
-transformed_purchase_df.printSchema()
-
-product_transform_condition = {}
-transformed_product_df = DataTransform().transform(product_df, product_transform_condition)
-transformed_product_df.printSchema()

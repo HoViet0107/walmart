@@ -6,7 +6,6 @@ class Extractor:
         self.spark = spark
 
     def extract(self):
-        print('1')
         raise ValueError('Not implemented')
 
 
@@ -16,5 +15,4 @@ class DataFrameExtractor(Extractor):
 
     def extract(self, data_type, path):
         inputDF = get_data_source(self.spark, data_type, path)
-        print('extractor called')
         return inputDF
