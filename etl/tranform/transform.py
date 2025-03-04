@@ -26,23 +26,6 @@ class CustomerDataTransformer(Transformer):
             )
         
         # fill null
-        '''
-        chỉ điền giá trị mặc định thì c1
-        c1: 
-            customer_df.fillna('Unknown', subset=['first_name', 'last_name', 'address', 'city', email]) \
-                        .fillna('1990-01-01', subset=['date_of_birth']) \
-                        .fillna('000-000-0000', subset=['phone_number']) 
-
-
-        c2: mỗi lần điền thì sẽ tạo 1 df với mỗi cột, nếu có hơn 1 đk xác định thì dùng c2
-            fillna = customer_df
-                .withColumn('first_name', when(col('first_name').isNull(), 'Unknown').otherwise('first_name'))
-                .withColumn('last_name', when(col('last_name').isNull(), 'Unknown').otherwise('last_name'))
-                .withColumn('address', when(col('address').isNull(), 'Unknown').otherwise('address'))
-                .withColumn('email', when(col('email').isNull(), 'Unknown').otherwise('email'))
-                .withColumn('date_of_birth', when(col('date_of_birth').isNull(), '1990-01-01').otherwise('date_of_birth'))
-                .withColumn('phone_number', when(col('phone_number').isNull(), '000-000-0000').otherwise('phone_number'))
-        '''
         fill_null_df = conver_dtype_df.fillna('Unknown', subset=['first_name', 'last_name', 'address', 'city', 'email']) \
                                     .fillna('1990-01-01', subset=['date_of_birth']) \
                                     .fillna('000-000-0000', subset=['phone_number']) \

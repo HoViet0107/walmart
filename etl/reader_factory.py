@@ -1,6 +1,8 @@
+from etl.spark_initializer import SparkInitializer
+
 class Datasource:
-    def __init__(self, spark, path):
-        self.spark = spark
+    def __init__(self, path):
+        self.spark = SparkInitializer.get_spark()
         self.path = path
        
     def read_df(self):
@@ -14,9 +16,9 @@ class CSVDataSource(Datasource):
         )
 
 
-def get_data_source(spark,data_type, path):
+def get_data_source(data_type, path):
     if data_type == 'csv':
-        return CSVDataSource(spark, path).read_df()
+        return CSVDataSource( path).read_df()
     else:
         raise ValueError(f'Not implimented this data type: {data_type}')
 
