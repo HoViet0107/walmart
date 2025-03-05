@@ -6,17 +6,26 @@ This project is a ETL (Extract, Transform, Load) project that demonstrates the p
 ## Table of Contents
 - [Introduction](#introduction)
 - [Technologies Used](#technologies-used)
-- [Transformation](##transformation)
+- [Transformation](#transformation)
 - [Installation](#installation)
-- [License](##license)
+- [License](#license)
 
 ## Introduction  
-Giới thiệu chi tiết về dự án...
+
+In the retail industry, managing and analyzing large volumes of transactional and customer data is crucial for business insights and decision-making. This Fashion Retail ETL Project is designed to process raw data efficiently and transform it into a structured format for further analysis and reporting.
+
+The project follows the **ETL** (Extract, Transform, Load) pipeline using **Apache Spark** (PySpark) to handle large datasets, perform necessary data cleaning and transformation, and finally store the processed data into a MySQL database.
+
+Key Features:
+
+- **Extract**: Load raw transactional data from CSV files.
+- **Transform**: Clean, normalize, and structure data (handle missing values, remove duplicates, format data).
+- **Load**: Store clean data into a MySQL database for analysis.
 
 ## Technologies Used  
 
     - Python: Programming language used for implementing the Spark ETL process.
-    - PySpark: Distributed data processing framework used for scalable ETL operations.
+    - PySpark: PySpark is the Python API for Apache Spark. It enables you to perform real-time, large-scale data processing in a distributed environment using Python.
     - MySQL: The final processed data is loaded into a MySQL database.
 
 ## Transformation  
@@ -25,25 +34,33 @@ The Spark ETL process involves the following transformation steps on the extract
 
 - Date Format Change:
      - Convert date columns to a consistent date format.
-     - Change `review_rating` from Doble to Float.
-- Dealing with missing datas: Replace missing datas with general values such as: `Unknown`, `-1`.
-- Dealing with duplicated data
+     - Change `review_rating` from Double to Float.
+- Handling Missing Data:
+     - Replace missing values with general values such as `Unknown`
+     - Replace missing numerical values with `-1` value.
+- Handling Duplicated Data:
+     - Identify and remove duplicate records to ensure data integrity.
+     - Use Spark’s .dropDuplicates() method to eliminate duplicate rows based on unique identifiers.
 
 After clean up data, load cleaned data to Mysql database:
 
-- Use 
+- Use JDBC Connector to write the cleaned data into MySQL
+- Ensure the database schema matches the transformed data structure. 
 
 ## Installation  
-1. Download and Install Python for Windows  
+1. Download and Install Python for Windows
+
    Link: [Download Python](https://www.python.org/downloads/)
 
-2. Download and Install MySQL for Windows  
+2. Download and Install MySQL for Windows
+   
    Go to: [Download MySQL](https://dev.mysql.com/downloads/installer/)  
-   - Select version: choose version  
-   - Select Operating System: your system  
+   - Select version: Choose version  
+   - Select Operating System: Your system  
    - Configure: [MySQL Installation Guide](https://www.geeksforgeeks.org/how-to-install-mysql-in-windows/)
 
-3. Download JDK 8 or 11:  
+4. Download JDK 8 or 11:  
+
    Link: [Download JDK](https://drive.google.com/drive/folders/1YiKNzQhiNOz_S_gCyjd_IbWwcAAnvqlx?usp=sharing)  
    - Run MSI file to install
 
@@ -51,46 +68,40 @@ After clean up data, load cleaned data to Mysql database:
    
    - Put the `bin` folder in the zip file to `"C:\Program Files\Java\jdk-11"` (create if not exists)
 
-5. Clone this repository to your local machine:
-   ```sh
-   git clone https://github.com/your-username/spark-etl-project.git
-   cd spark-etl-project
-6. Open in Vscode
-   ```sh
-   code .
-7. Open terminal
+6. Clone this repository to your local machine:
+   
+       git clone https://github.com/your-username/spark-etl-project.git
+       cd spark-etl-project
+   
+8. Open in Vscode
+   
+       code .
+   
+10. Open terminal
    
        Ctrl + "`"
         Or
        Toolbar -> Terminal -> New Terminal
    
-   Check version:
+   Check python:
        
        python --version
-9. Create Virtual Environment(venv) and activate
+       
+11. Create Virtual Environment(venv) and activate
         
         python -m venv .venv
         .\.venv\Scripts\activate
    
-11. Install the required dependencies:
+12. Install the required dependencies:
         
         pip install -r requirements.txt
-13. Run main.py:
+    
+14. Run this project:
 
         python.exe main.py
-        or
+         or
         Use main.ipynb
 
-## Transformation  
-Các bước chuyển đổi dữ liệu...
-
-## Error Handling  
-Xử lý lỗi...
-
-
-
-## Contributing  
-Cách đóng góp cho dự án...
-
 ## License  
-Thông tin giấy phép...
+
+This project is licensed under the MIT License - see the LICENSE file for details.
