@@ -10,7 +10,7 @@ This project is a ETL (Extract, Transform, Load) project that demonstrates the p
 - [Installation](#installation)
 - [License](#license)
 
-## Introduction  
+## Introduction
 
 In the retail industry, managing and analyzing large volumes of transactional and customer data is crucial for business insights and decision-making. This Fashion Retail ETL Project is designed to process raw data efficiently and transform it into a structured format for further analysis and reporting.
 
@@ -59,7 +59,7 @@ After clean up data, load cleaned data to Mysql database:
    - Select Operating System: Your system  
    - Configure: [MySQL Installation Guide](https://www.geeksforgeeks.org/how-to-install-mysql-in-windows/)
 
-4. Download JDK 8 or 11:  
+3. Download JDK 8 or 11:  
 
    Link: [Download JDK](https://drive.google.com/drive/folders/1YiKNzQhiNOz_S_gCyjd_IbWwcAAnvqlx?usp=sharing)  
    - Run MSI file to install
@@ -68,16 +68,16 @@ After clean up data, load cleaned data to Mysql database:
    
    - Put the `bin` folder in the zip file to `"C:\Program Files\Java\jdk-11"` (create if not exists)
 
-6. Clone this repository to your local machine:
+4. Clone this repository to your local machine:
    
        git clone https://github.com/your-username/spark-etl-project.git
        cd spark-etl-project
    
-8. Open in Vscode
+5. Open in Vscode
    
        code .
    
-10. Open terminal
+6. Open terminal
    
        Ctrl + "`"
         Or
@@ -87,16 +87,16 @@ After clean up data, load cleaned data to Mysql database:
        
        python --version
        
-11. Create Virtual Environment(venv) and activate
+7. Create Virtual Environment(venv) and activate
         
         python -m venv .venv
         .\.venv\Scripts\activate
    
-12. Install the required dependencies:
+8. Install the required dependencies:
         
         pip install -r requirements.txt
     
-14. Run this project:
+9. Run this project:
 
         python.exe main.py
          or
