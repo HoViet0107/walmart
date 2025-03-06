@@ -22,22 +22,22 @@ class MysqlExecutor(Executor):
         )
         cursor = conn.cursor()
         try:
-            if not sql_statements:  # Kiểm tra nếu danh sách rỗng
-                print(f"Danh sách truy vấn trống!: {error_message}")
+            if not sql_statements: 
+                print(f"Empty SQL statements!: {error_message}")
                 return
             
-            # Thực thi các lệnh SQL
+            # Execute SQL statements
             for sql in sql_statements:
                 cursor.execute(sql)
             
             conn.commit()
             print(message)
         except Exception as e:
-            # Nếu có lỗi, rollback toàn bột thay đổi
+            # Rollback if error
             conn.rollback()
             print(f'{error_message}: {e}')
         finally:
             conn.rollback()
-            # Đóng cursor và connection
+            # Close cursor and connection
             cursor.close()
             conn.close()

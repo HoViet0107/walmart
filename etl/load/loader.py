@@ -12,10 +12,9 @@ class LoadDataToMysql(Loader):
         spark = SparkInitializer.get_spark()
 
         '''
-            .mode("append"): Ghi thêm dữ liệu vào bảng MySQL, không xóa dữ liệu cũ.
-            'truncate', 'false': Đảm bảo dữ liệu không bị cắt ngắn.
-            'rewriteBatchedStatements', 'true': Cho phép gửi nhiều câu lệnh insert vào MySQL cùng lúc.
-            'batchsize', 5000: Chia dữ liệu thành các batch nhỏ để tối ưu hiệu suất(mỗi lần gửi 5 dòng) 
+            .mode("append"): add new data to table but not overwrite.
+            'rewriteBatchedStatements', 'true': combines multiple insert statements into batches.
+            'batchsize', 5000: nums of rows each batch
         '''
         
         try:
@@ -28,5 +27,5 @@ class LoadDataToMysql(Loader):
                     properties=connection_properties)
             
         except Exception as e:
-            print(f"Lỗi khi ghi dữ liệu vào MySQL: {e}")
+            print(f"Error loading data to MySQL: {e}")
         

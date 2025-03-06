@@ -13,7 +13,7 @@ class Transformer:
 
 class CustomerDataTransformer(Transformer):
     def transform(self, inputDF):
-        # chuyển đổi kiểu dữ liệu
+        # change data type
         '''
             {
                 'date_of_birth': DateType(),
@@ -25,18 +25,18 @@ class CustomerDataTransformer(Transformer):
             {'date_of_birth': DateType()}
             )
         
-        # fill null
+        # handle missing value
         fill_null_df = conver_dtype_df.fillna('Unknown', subset=['first_name', 'last_name', 'address', 'city', 'email']) \
                                     .fillna('1990-01-01', subset=['date_of_birth']) \
                                     .fillna('000-000-0000', subset=['phone_number']) \
                                     .fillna('Other', subset=['gender'])
-        # loại bỏ lặp
+        # remove duplicates
         outputDF = ValidatorImpl().drop_duplicate_records_df(fill_null_df, ['customer_id', 'first_name', 'last_name', 'gender', 'date_of_birth'])
         return outputDF
 
 class PurchaseHistoryDataTransformer(Transformer):
     def transform(self, inputDF):
-        # chuyển đổi kiểu dữ liệu
+        # change data type
         conver_dtype_df = ValidatorImpl().convert_data_type_format(
             inputDF,
                 {
@@ -45,19 +45,19 @@ class PurchaseHistoryDataTransformer(Transformer):
                 }
             )
         
-        # fill null
+        # handle missing value
         fill_null_df = conver_dtype_df.fillna(-1, subset=['purchase_amount', 'review_rating'])
         
-        # loại bỏ lặp
+        # remove duplicates
         outputDF = ValidatorImpl().drop_duplicate_records_df(fill_null_df, ['customer_id', 'item_purchased', 'date_purchase'])
         return outputDF
 
 class ProductDataTransformer(Transformer):
     def transform(self, inputDF):
-        # chuyển đổi kiểu dữ liệu
-        # fill null
+        # change data type
+        # handle missing value
         outputDF = inputDF.fillna('Unknow_category', subset=['category'])
-        # loại bỏ lặp
+        # remove duplicates
 
         return outputDF
     

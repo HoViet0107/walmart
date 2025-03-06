@@ -10,28 +10,27 @@ spark = SparkInitializer.get_spark()
 
 
 
-### B1: Trích xuất dữ liệu từ các nguồn
-
+### B1: Extract data from csv file
 fas_purchase_df = (DataFrameExtractor()
                     .extract('csv', 'dataset/fashion_purchase_history.csv'))
 customer_df = (DataFrameExtractor()
                     .extract('csv', 'dataset/customer.csv'))
 product_df = (DataFrameExtractor()
                     .extract('csv', 'dataset/products.csv'))
-# kiểm tra kiểu dữ liệu
-print('\033[1m' +"Kiểu dữ liệu:")
+# Data type
+print('\033[1m' +"Data types:")
 customer_df.printSchema()
 fas_purchase_df.printSchema()
 product_df.printSchema()
 
-# kiểm tra null
+# Check Check missing value
 print('\033[1m' + "Null:")
 ValidatorImpl().check_null_values(customer_df)
 ValidatorImpl().check_null_values(fas_purchase_df)
 ValidatorImpl().check_null_values(product_df)
 
-# kiểm tra giá trị lặp
-print('\033[1m' +"Bản ghi lặp:")
+# Check duplicate reacords
+print('\033[1m' +"Duplicate records:")
 ValidatorImpl().check_duplicate_records(customer_df,['customer_id', 'first_name', 'last_name', 'gender', 'date_of_birth'])
 ValidatorImpl().check_duplicate_records(fas_purchase_df,['customer_id', 'item_purchased', 'date_purchase'])
 ValidatorImpl().check_duplicate_records(product_df,['item', 'category'])
@@ -39,25 +38,25 @@ ValidatorImpl().check_duplicate_records(product_df,['item', 'category'])
 
 
 
-# Bước 2: Chuyển đổi dữ liệu
+# Step 2: Transform
 '''
-- Chuyển đổi kiểu dữ liệu:
+- Transform data type:
     - date_of_birth: TimeStamp -> Date
     - date_purchase: Date -> Timestamp
     - review_rating: Double -> Floatx
-- Loại bỏ lặp
-- Sửa bản ghi có giá trị null
+- Drop duplicates
+- Handle missing value
 '''
 cleand_customer_df = CustomerDataTransformer().transform(customer_df)
 cleand_fas_purchase_df = PurchaseHistoryDataTransformer().transform(fas_purchase_df)
 cleand_product_df = ProductDataTransformer().transform(product_df)
 
-# kiểm tra kiểu dữ liệu
+# Check data type again
 cleand_customer_df.printSchema()
 cleand_fas_purchase_df.printSchema()
 cleand_product_df.printSchema()
 
-# kiểm tra giá trị lặp
+# Check duplicate value again
 ValidatorImpl().check_duplicate_records(cleand_customer_df,['customer_id', 'first_name', 'last_name', 'gender', 'date_of_birth'])
 ValidatorImpl().check_duplicate_records(cleand_fas_purchase_df,['customer_id', 'item_purchased', 'date_purchase'])
 ValidatorImpl().check_duplicate_records(cleand_product_df,['item', 'category'])
@@ -65,8 +64,8 @@ ValidatorImpl().check_duplicate_records(cleand_product_df,['item', 'category'])
 
 
 
-# Bước 3: Tải dữ liệu vào MySQL
-## Tạo bảng 
+# Step 3: Load data to MySQL database
+## Create table 
 sql_statements =[
     """
     CREATE TABLE customer(
@@ -101,9 +100,8 @@ sql_statements =[
        )   
     """    
 ]
-# Tạo bảng
-message = '✅ Tạo bảng thành công!' 
-error_message = '❌ Lỗi khi tạo bảng:'
+message = '✅ Creation table success!' 
+error_message = '❌ Error:'
 for statement in sql_statements:
     try:
         MysqlExecutor().execute([statement], message, error_message)
@@ -112,7 +110,7 @@ for statement in sql_statements:
         print(f"Error details: {e}")
         break
 
-# Tải vào Mysql
+# Load to Mysql database
 db_config = {
     'mode': 'append',
     'jdbc_url': 'jdbc:mysql://localhost:3306/walmart'
@@ -133,7 +131,7 @@ purchase_table_name = 'purchase_history_stagging'
 LoadDataToMysql().load_to_db(cleand_fas_purchase_df, purchase_table_name, db_config, connection_properties)
 
 '''
-    Kiểm tra dữ liệu tham chiếu giữa bảng: 
+    Checking referential integrity: 
         purchase_history và product
         purchase_history và customer
 '''
@@ -153,7 +151,7 @@ missing_customer = cleand_fas_purchase_df.join(
 missing_customer.show()
 
 
-# Tạo bảng có ràng buộc 
+# Create purchase_history table
 sql_statement=["""
     CREATE TABLE purchase_history 
     SELECT ph.* 
@@ -178,7 +176,5 @@ sql_statement=["""
     ON DELETE CASCADE;   
     """
 ]
-message = '✅ Tạo bảng purchase_history thành công' 
-error_message = '❌ Lỗi khi tạo bảng:'
 MysqlExecutor().execute(sql_statement, message, error_message)
 #-------------------end B3------------------------

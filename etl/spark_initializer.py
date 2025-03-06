@@ -6,8 +6,8 @@ class SparkInitializer:
     @staticmethod
     def get_spark():
         """
-        Trả về 1 singleton SparkSession.
-        Tạo mới nếu chưa tồn tại.
+        Return a singleton SparkSession.
+        Create new if not exist.
         """
         if SparkInitializer._spark is None:
             try:
@@ -15,18 +15,17 @@ class SparkInitializer:
                     SparkSession
                     .builder
                     .appName("Walmart ETL")
-                    # Cấu hình thư viện MySQL Connector để đọc/ghi MySQL
+                    # configure MySQL Connector to read/write data to MySQL
                     .config("spark.jars", "./connector/mysql-connector-java-8.0.30.jar") 
-                    # Cấu hình thêm
-                    .config("spark.sql.warehouse.dir", "spark-warehouse") #Xác định thư mục warehouse để lưu trữ dữ liệu trong Spark SQL.
-                    .config("spark.executor.memory", "2g") # Bộ nhớ cấp cho mỗi executor (2GB).
-                    .config("spark.driver.memory", "1g") # Bộ nhớ cấp cho driver Spark (1GB).
-                    # Tối ưu hiệu suất bằng cách bật Garbage Collector (G1GC) để quản lý bộ nhớ
+                    .config("spark.sql.warehouse.dir", "spark-warehouse")
+                    .config("spark.executor.memory", "2g") # Specify executor memory (2GB).
+                    .config("spark.driver.memory", "1g") # Specify driver Spark memory (1GB).
+                    # Enable Garbage Collector (G1GC)
                     .config("spark.executor.extraJavaOptions", "-XX:+UseG1GC")
                     .getOrCreate()
                 )
                 
-                # Cấu hình logging(giảm bớt log chỉ hiển thị lỗi ERROR)
+                # Configure logging
                 SparkInitializer._spark.sparkContext.setLogLevel("ERROR")
                 
             except Exception as e:
@@ -38,7 +37,7 @@ class SparkInitializer:
     @staticmethod
     def stop_spark():
         """
-        Dừng spark session.
+        Stop spark session.
         """
         if SparkInitializer._spark is not None:
             try:

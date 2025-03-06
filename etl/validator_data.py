@@ -27,13 +27,11 @@ class ValidatorImpl(Validator):
         :param df: DataFrame
         :return: DataFrame
         """
-        # Tên cột và kiểu
         cols_info = [(c[0], c[1]) for c in dataframe.dtypes]
         
-        # biểu thức
         exprs = []
         for column_name, data_type in cols_info:
-            # numeric types, kiểm tra null và NaN
+            # numeric types, Check null and NaN
             if data_type in ('double', 'float'):
                 expr = count(
                         when(
@@ -41,7 +39,7 @@ class ValidatorImpl(Validator):
                             column_name
                         )
                     )
-            # non-numeric types, chỉ kiểm tra null
+            # non-numeric types, only check null
             else:
                 expr = count(
                         when(
@@ -52,13 +50,12 @@ class ValidatorImpl(Validator):
             
             exprs.append(expr.alias(column_name))
     
-        # in ra
         dataframe.select(exprs).show()
 
     def drop_cols(self, df, cols):
         """
         :param df: DataFrame
-        :param cols: danh sách cột cần xóa
+        :param cols: list columns
         :return: dataset frame
         Example:
         cols = ['zip_code','state']
@@ -70,13 +67,13 @@ class ValidatorImpl(Validator):
     def check_duplicate_records(self, df, cols=None):
         """
         :param df: DataFrame
-        :param cols: Danh sách cột
+        :param cols: list columns
         :return: DataFrame
         duplicate_records_df(pur_df, ['purchase_id']).show()
         duplicate_records_df(pur_df, ['customer_id','product_id', 'purchase_date','quantity']).show()
         """
         if cols is None:
-            cols = df.columns  # Nếu không có cột nào được chỉ định, dùng tất cả các cột trong DataFrame
+            cols = df.columns  # if no cols specified, check all
         return df.groupBy(cols) \
             .agg(count("*") \
                  .alias("duplicate_count")) \
@@ -85,7 +82,7 @@ class ValidatorImpl(Validator):
     def drop_duplicate_records_df(self, df, *cols):
         """
         :param df: DataFrame
-        :param cols: Danh Sách cột
+        :param cols: List columns
         :return: DataFrame
         """
         if cols is None:
