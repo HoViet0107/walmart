@@ -1,5 +1,7 @@
-pyspark
+pyspark==3.5.0
 mysql-connector-python
 ipykernel
-boto3 
-delta-spark
+boto3==1.34.14
+python-dotenv==1.0.0
+delta-spark==3.0.0
+setuptools

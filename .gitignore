@@ -2,6 +2,7 @@
 __pycache__/
 *.pyc
 *.pyo
+jars/
 
 # file txt
 readme.txt
@@ -23,3 +24,5 @@ dataset/backup/
 __pycache__/
 *.pyc
 .ipynb_checkpoints/
+
+test_s3_connection.py
