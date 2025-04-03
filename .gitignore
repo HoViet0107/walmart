@@ -1,21 +1,25 @@
-# Bỏ qua file/directory cache của Python
+# file/directory Python cache
 __pycache__/
 *.pyc
 *.pyo
 
-# bỏ qua file txt
+# file txt
 readme.txt
 ridme.txt
 
-# bỏ qua venv
+# venv
 env/
 venv/
 
-#bỏ qua jdk
+#jdk
 jdk/
 
-# Bỏ qua thư mục 
 .git/
 .idea/
 .venv/
 dataset/backup/
+
+.env
+__pycache__/
+*.pyc
+.ipynb_checkpoints/

@@ -1,13 +1,28 @@
 from pyspark.sql import SparkSession
+from etl.config.aws_config import AWSConfig
 
 class SparkInitializer:
     _spark = None
-    
+
     @staticmethod
+    def get_spark():
+        aws_config = AWSConfig()
+        
+        return (SparkSession.builder
+                .appName("Walmart Fashion ETL")
+                .config("spark.hadoop.fs.s3a.access.key", aws_config.access_key)
+                .config("spark.hadoop.fs.s3a.secret.key", aws_config.secret_key)
+                .config("spark.hadoop.fs.s3a.endpoint", f"s3.{aws_config.region}.amazonaws.com")
+                .config("spark.hadoop.fs.s3a.impl", "org.apache.hadoop.fs.s3a.S3AFileSystem")
+                .getOrCreate())
+    
+    # no aws
+    # @staticmethod
     def get_spark():
         """
         Return a singleton SparkSession.
         Create new if not exist.
+        """
         """
         if SparkInitializer._spark is None:
             try:
@@ -33,6 +48,7 @@ class SparkInitializer:
                 raise RuntimeError(error_message)
                 
         return SparkInitializer._spark
+        """
     
     @staticmethod
     def stop_spark():
