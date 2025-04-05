@@ -21,11 +21,14 @@ Key Features:
 - **Extract**: Load raw transactional data from CSV files.
 - **Transform**: Clean, normalize, and structure data (handle missing values, remove duplicates, format data).
 - **Load**: Store clean data into a MySQL database for analysis.
+- **Analyze & Report**: Generate overview about customer, product and purchase. Summarize total revenue, summary of the top 10 users with the highest total spending.
 
 ## Technologies Used  
 
     - Python: Programming language used for implementing the Spark ETL process.
     - PySpark: PySpark is the Python API for Apache Spark. It enables you to perform real-time, large-scale data processing in a distributed environment using Python.
+    - Matplotlib & Seaborn: For data visualization (bar charts, line charts, etc.) to support insights and reporting.
+    - Openpyxl: Used to export processed data and reports to Excel format (.xlsx).
     - MySQL: The final processed data is loaded into a MySQL database.
 
 ## Transformation  
@@ -42,10 +45,11 @@ The Spark ETL process involves the following transformation steps on the extract
      - Identify and remove duplicate records to ensure data integrity.
      - Use Spark’s .dropDuplicates() method to eliminate duplicate rows based on unique identifiers.
 
-After clean up data, load cleaned data to Mysql database:
+After clean up data, load cleaned data to Mysql database or AWS S3:
 
-- Use JDBC Connector to write the cleaned data into MySQL
-- Ensure the database schema matches the transformed data structure. 
+- Use JDBC Connector to write the cleaned data into MySQL.
+- Ensure the database schema matches the transformed data structure.
+- Used AWS CLI to upload cleaned data to AWS S3.
 
 ## Installation  
 1. Download and Install Python for Windows
@@ -95,8 +99,10 @@ After clean up data, load cleaned data to Mysql database:
 8. Install the required dependencies:
         
         pip install -r requirements.txt
+
+9. Create aws account then create iam and change the `aws_config.py`
     
-9. Run this project:
+10. Run this project:
 
         python.exe main.py
          or
