@@ -4,9 +4,10 @@ __pycache__/
 *.pyo
 jars/
 
-# file txt
+# file
 readme.txt
 ridme.txt
+test.ipynb
 
 # venv
 env/

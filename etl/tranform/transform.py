@@ -56,7 +56,7 @@ class ProductDataTransformer(Transformer):
     def transform(self, inputDF):
         # change data type
         # handle missing value
-        outputDF = inputDF.fillna('Unknow_category', subset=['category'])
+        outputDF = inputDF.fillna('Unknow', subset=['category'])
         # remove duplicates
 
         return outputDF
